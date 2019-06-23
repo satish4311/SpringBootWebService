@@ -1,0 +1,92 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.kroger.com/Customer-ws"
+           targetNamespace="http://www.kroger.com/Customer-ws" elementFormDefault="qualified">
+
+    <xs:element name="getCustomerByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="CustomerId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getCustomerByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                 <xs:element name="serviceStatus" type="tns:serviceStatus"/> 
+                <xs:element name="customerInfo" type="tns:customerInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="customerInfo">
+        <xs:sequence>
+            <xs:element name="customerId" type="xs:long"/>
+            <xs:element name="customerName" type="xs:string"/>
+            <xs:element name="customerCity" type="xs:string"/>
+            <xs:element name="customerPhone" type="xs:long"/>
+            <xs:element name="customerLoyalityPoint" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="getAllCustomerRequest">
+        <xs:complexType/>
+    </xs:element>    
+    <xs:element name="getAllCustomerResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/> 
+                <xs:element name="customerInfo" type="tns:customerInfo" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>   
+    <xs:complexType name="serviceStatus">
+        <xs:sequence>
+            <xs:element name="statusCode" type="xs:string"/>
+            <xs:element name="message" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>     
+    <xs:element name="addCustomerRequest">
+        <xs:complexType>
+            <xs:sequence>
+            <xs:element name="customerId" type="xs:long"/>
+            <xs:element name="customerName" type="xs:string"/>
+            <xs:element name="customerCity" type="xs:string"/>
+            <xs:element name="customerPhone" type="xs:long"/>
+            <xs:element name="customerLoyalityPoint" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addCustomerResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>            
+                <xs:element name="customerInfo" type="tns:customerInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="updateCustomerRequest">
+        <xs:complexType>
+            <xs:sequence>
+               <xs:element name="customerInfo" type="tns:customerInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="updateCustomerResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="deleteCustomerRequest">
+        <xs:complexType>
+            <xs:sequence>
+               <xs:element name="customerId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="deleteCustomerResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>                   
+</xs:schema>
