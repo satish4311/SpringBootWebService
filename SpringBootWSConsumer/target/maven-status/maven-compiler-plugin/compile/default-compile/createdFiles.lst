@@ -1,0 +1,14 @@
+com\kroger\wsdl\ObjectFactory.class
+com\kroger\wsdl\DeleteCustomerRequest.class
+com\kroger\wsdl\GetAllCustomerResponse.class
+com\kroger\wsdl\DeleteCustomerResponse.class
+com\kroger\wsdl\AddCustomerResponse.class
+com\kroger\wsdl\GetAllCustomerRequest.class
+com\kroger\wsdl\package-info.class
+com\kroger\wsdl\GetCustomerByIdResponse.class
+com\kroger\wsdl\AddCustomerRequest.class
+com\kroger\wsdl\UpdateCustomerResponse.class
+com\kroger\wsdl\GetCustomerByIdRequest.class
+com\kroger\wsdl\UpdateCustomerRequest.class
+com\kroger\wsdl\ServiceStatus.class
+com\kroger\wsdl\CustomerInfo.class
