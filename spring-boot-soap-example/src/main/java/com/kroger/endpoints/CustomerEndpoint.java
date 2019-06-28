@@ -3,15 +3,12 @@ package com.kroger.endpoints;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-
+import com.kroger.constants.ConfigProperties;
 import com.kroger.constants.CustomerUtils;
 import com.kroger.customer.ServiceFaultException;
 import com.kroger.entity.Customer;
@@ -28,27 +25,30 @@ import com.kroger.gs_ws.UpdateCustomerRequest;
 import com.kroger.gs_ws.UpdateCustomerResponse;
 import com.kroger.service.CustomerService;
 
-@Endpoint
-public class CustomerEndpoint {
+import lombok.extern.log4j.Log4j2;
 
-	private static final Logger log = LogManager.getLogger(CustomerEndpoint.class);
+@Endpoint
+@Log4j2
+public class CustomerEndpoint {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private ConfigProperties configProperties;
 
 	@PayloadRoot(namespace = CustomerUtils.NAMESPACE_URI, localPart = CustomerUtils.LOCALPART_CUST_BY_ID)
 	@ResponsePayload
 	public GetCustomerByIdResponse getCustomer(@RequestPayload GetCustomerByIdRequest request) {
 		log.info("getCustomer Method Request Object" + request.getCustomerId());
 		GetCustomerByIdResponse response = new GetCustomerByIdResponse();
-		log.info("CustomerId " + request.getCustomerId());
 		try {
 
 			if (Objects.isNull(request.getCustomerId()) || request.getCustomerId() == 0) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.ENTER_CUSTOMER_ID);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getCustomerId());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 			}
 
 			Customer customerResponse = customerService.getCustomerById(request.getCustomerId());
@@ -60,8 +60,8 @@ public class CustomerEndpoint {
 			customerInfo.setCustomerPhone(customerResponse.getCustomerPhone());
 			customerInfo.setCustomerLoyalityPoint(customerResponse.getCustomerRewardPoints());
 			ServiceStatus serviceStatus = new ServiceStatus();
-			serviceStatus.setStatusCode(CustomerUtils.SUCCESS_STATUS_CODE);
-			serviceStatus.setMessage(CustomerUtils.RETRIEVE_STATUS_MESSAGE);
+			serviceStatus.setStatusCode(configProperties.getSuccessStatusCode());
+			serviceStatus.setMessage(configProperties.getRetrieveStatusMessage());
 			response.setServiceStatus(serviceStatus);
 			response.setCustomerInfo(customerInfo);
 			return response;
@@ -73,9 +73,10 @@ public class CustomerEndpoint {
 	@PayloadRoot(namespace = CustomerUtils.NAMESPACE_URI, localPart = CustomerUtils.LOCALPART_ALL_CUST)
 	@ResponsePayload
 	public GetAllCustomerResponse getAllCustomers() {
+		log.info("getAllCustomers Method Request Object");
 		try {
 			GetAllCustomerResponse response = new GetAllCustomerResponse();
-			List<CustomerInfo> customerInfoList = new LinkedList<CustomerInfo>();
+			List<CustomerInfo> customerInfoList = new LinkedList<>();
 			List<Customer> customerList = customerService.getAllCustomers();
 			customerList.forEach(customer -> {
 				CustomerInfo customerInfo = new CustomerInfo();
@@ -88,8 +89,8 @@ public class CustomerEndpoint {
 			});
 			response.getCustomerInfo().addAll(customerInfoList);
 			ServiceStatus serviceStatus = new ServiceStatus();
-			serviceStatus.setStatusCode(CustomerUtils.SUCCESS_STATUS_CODE);
-			serviceStatus.setMessage(CustomerUtils.RETRIEVE_STATUS_MESSAGE);
+			serviceStatus.setStatusCode(configProperties.getSuccessStatusCode());
+			serviceStatus.setMessage(configProperties.getRetrieveStatusMessage());
 			response.setServiceStatus(serviceStatus);
 			return response;
 		} catch (ServiceFaultException exception) {
@@ -108,29 +109,29 @@ public class CustomerEndpoint {
 			if ((request.getCustomerId() == 0) && (request.getCustomerName() == null)
 					&& (request.getCustomerCity() == null) && (request.getCustomerPhone() == 0)) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.CUSTOMER_DATA_ADD_ERROR_MSG);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getAddErrorMsg());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 			}
 
 			else if ((request.getCustomerId() != 0)
-					&& (((CustomerUtils.NULL_CONDITION.equals(request.getCustomerName()))
-							|| request.getCustomerName() == null)
-							|| ((CustomerUtils.NULL_CONDITION.equals(request.getCustomerCity()))
-									|| request.getCustomerCity() == null)
+					&& (((configProperties.getNullCheck().equals(request.getCustomerName()))
+							|| request.getCustomerName() == null || (configProperties.getPatternCheck().equals(request.getCustomerName())) )
+							|| ((configProperties.getNullCheck().equals(request.getCustomerCity()))
+									|| request.getCustomerCity() == null || (configProperties.getPatternCheck().equals(request.getCustomerCity())))
 							|| (request.getCustomerPhone() == 0))) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.CUSTOMER_DATA_ADD_ERRORS_MSG);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getAddErrorMandMsg());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 
 			}
 
 			else if (Objects.isNull(request.getCustomerId()) || request.getCustomerId() == 0) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.ENTER_CUSTOMER_ID);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getCustomerId());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 			}
 
 			else {
@@ -140,8 +141,8 @@ public class CustomerEndpoint {
 				customer.setCustomerCity(request.getCustomerCity());
 				customer.setCustomerPhone(request.getCustomerPhone());
 				customer.setCustomerRewardPoints(request.getCustomerLoyalityPoint());
-				boolean flag = customerService.addCustomer(customer);
-				if (flag == true) {
+				Customer custResponse = customerService.addCustomer(customer);
+				if (custResponse != null) {
 					CustomerInfo customerInfo = new CustomerInfo();
 
 					customerInfo.setCustomerId(request.getCustomerId());
@@ -150,8 +151,8 @@ public class CustomerEndpoint {
 					customerInfo.setCustomerPhone(request.getCustomerPhone());
 					customerInfo.setCustomerLoyalityPoint(request.getCustomerLoyalityPoint());
 					response.setCustomerInfo(customerInfo);
-					serviceStatus.setStatusCode(CustomerUtils.SUCCESS_STATUS_CODE);
-					serviceStatus.setMessage(CustomerUtils.ADD_STATUS_MESSAGE);
+					serviceStatus.setStatusCode(configProperties.getSuccessStatusCode());
+					serviceStatus.setMessage(configProperties.getAddStatusMessage());
 					response.setServiceStatus(serviceStatus);
 				}
 			}
@@ -169,16 +170,18 @@ public class CustomerEndpoint {
 			UpdateCustomerResponse response = new UpdateCustomerResponse();
 
 			if ((request.getCustomerInfo().getCustomerId() != 0)
-					&& (((CustomerUtils.NULL_CONDITION.equals(request.getCustomerInfo().getCustomerName()))
-							|| request.getCustomerInfo().getCustomerName() == null)
-							&& ((CustomerUtils.NULL_CONDITION.equals(request.getCustomerInfo().getCustomerCity()))
-									|| request.getCustomerInfo().getCustomerCity() == null)
+					&& (((configProperties.getNullCheck().equals(request.getCustomerInfo().getCustomerName()))
+							|| request.getCustomerInfo().getCustomerName() == null
+							|| (configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerName())))
+							&& ((configProperties.getNullCheck().equals(request.getCustomerInfo().getCustomerCity()))
+									|| request.getCustomerInfo().getCustomerCity() == null
+									|| (configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerCity())))
 							&& (request.getCustomerInfo().getCustomerPhone() == 0)
 							&& (request.getCustomerInfo().getCustomerLoyalityPoint() == 0))) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.CUSTOMER_DATA_UPDATE_ERROR_MSG);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getUpdateErrorMsg());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 			}
 
 			else if ((request.getCustomerInfo().getCustomerId() == 0)
@@ -187,38 +190,33 @@ public class CustomerEndpoint {
 					&& (request.getCustomerInfo().getCustomerPhone() == 0)
 					&& (request.getCustomerInfo().getCustomerLoyalityPoint() == 0)) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.CUSTOMER_DATA_UPDATE_ERRORS_MSG);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getUpdateErrorMandMsg());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 			} else if (Objects.isNull(request.getCustomerInfo().getCustomerId())
 					|| request.getCustomerInfo().getCustomerId() == 0) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.ENTER_CUSTOMER_ID);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getCustomerId());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 			}
 
 			else {
 				Customer customer = new Customer();
 				customer.setCustomerId(request.getCustomerInfo().getCustomerId());
-				if ((request.getCustomerInfo().getCustomerName()) != null
-						&& (!(request.getCustomerInfo().getCustomerName()).trim().isEmpty()))
-					customer.setCustomerName(request.getCustomerInfo().getCustomerName());
-				if ((request.getCustomerInfo().getCustomerCity()) != null
-						&& (!(request.getCustomerInfo().getCustomerCity()).trim().isEmpty()))
-					customer.setCustomerCity(request.getCustomerInfo().getCustomerCity());
-				if (!(Objects.isNull(request.getCustomerInfo().getCustomerPhone()))) {
-					customer.setCustomerPhone(request.getCustomerInfo().getCustomerPhone());
-					if (!(Objects.isNull(request.getCustomerInfo().getCustomerLoyalityPoint()))) {
-						customer.setCustomerRewardPoints(request.getCustomerInfo().getCustomerLoyalityPoint());
-						customerService.updateCustomer(customer);
-						ServiceStatus serviceStatus = new ServiceStatus();
-						serviceStatus.setStatusCode(CustomerUtils.SUCCESS_STATUS_CODE);
-						serviceStatus.setMessage(CustomerUtils.UPDATE_STATUS_MESSAGE);
-						response.setServiceStatus(serviceStatus);
-					}
-
+				if(!(configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerName()))) {
+				customer.setCustomerName(request.getCustomerInfo().getCustomerName());
 				}
+				if(!(configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerCity()))) {
+				customer.setCustomerCity(request.getCustomerInfo().getCustomerCity());
+				}
+				customer.setCustomerPhone(request.getCustomerInfo().getCustomerPhone());
+				customer.setCustomerRewardPoints(request.getCustomerInfo().getCustomerLoyalityPoint());
+				customerService.updateCustomer(customer);
+				ServiceStatus serviceStatus = new ServiceStatus();
+				serviceStatus.setStatusCode(configProperties.getSuccessStatusCode());
+				serviceStatus.setMessage(configProperties.getUpdateStatusMessage());
+				response.setServiceStatus(serviceStatus);
 
 			}
 			return response;
@@ -234,15 +232,15 @@ public class CustomerEndpoint {
 		try {
 			if (request.getCustomerId() == 0) {
 				ServiceStatus service = new ServiceStatus();
-				service.setMessage(CustomerUtils.ENTER_CUSTOMER_ID);
-				service.setStatusCode(CustomerUtils.FAULT_CODE);
-				throw new ServiceFaultException(CustomerUtils.ERROR, service);
+				service.setMessage(configProperties.getCustomerId());
+				service.setStatusCode(configProperties.getFaultCode());
+				throw new ServiceFaultException(configProperties.getError(), service);
 			}
 			Customer customer = customerService.getCustomerById(request.getCustomerId());
 			ServiceStatus serviceStatus = new ServiceStatus();
 			customerService.deleteCustomer(customer);
-			serviceStatus.setStatusCode(CustomerUtils.SUCCESS_STATUS_CODE);
-			serviceStatus.setMessage(CustomerUtils.DELETE_STATUS_MESSAGE);
+			serviceStatus.setStatusCode(configProperties.getSuccessStatusCode());
+			serviceStatus.setMessage(configProperties.getDeleteStatusMessage());
 			DeleteCustomerResponse response = new DeleteCustomerResponse();
 			response.setServiceStatus(serviceStatus);
 			return response;

@@ -5,7 +5,7 @@ import com.kroger.gs_ws.ServiceStatus;
 public class ServiceFaultException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	private ServiceStatus serviceStatus;
+	private  ServiceStatus serviceStatus;
 
 	public ServiceFaultException(String message, ServiceStatus serviceStatus) {
 		super(message);

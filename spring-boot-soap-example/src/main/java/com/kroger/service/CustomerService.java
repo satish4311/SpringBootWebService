@@ -8,11 +8,11 @@ import com.kroger.entity.Customer;
 public interface CustomerService {
 	List<Customer> getAllCustomers();
 
-	Customer getCustomerById(long customerId) throws ServiceFaultException;
+	Customer getCustomerById(long customerId) ;
 
-	boolean addCustomer(Customer customer) throws ServiceFaultException;
+	Customer addCustomer(Customer customer) ;
 
-	void updateCustomer(Customer customer) throws ServiceFaultException;
+	void updateCustomer(Customer customer) ;
 
 	void deleteCustomer(Customer customer);
 }
