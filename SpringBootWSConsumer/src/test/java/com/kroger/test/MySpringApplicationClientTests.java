@@ -40,7 +40,7 @@ public class MySpringApplicationClientTests {
 				+ customerInfo.getCustomerLoyalityPoint());
 		
 
-		 assertEquals(customerByIdResponse.getServiceStatus().getStatusCode(), "200");
+		 assertEquals("200",customerByIdResponse.getServiceStatus().getStatusCode() );
 		
 
 
@@ -56,7 +56,7 @@ public class MySpringApplicationClientTests {
 		allArticlesResponse.getCustomerInfo().stream()
 				.forEach(e -> log.info("Customer Id : " +e.getCustomerId() + ":::"+"Customer Name : " + e.getCustomerName() + ":::"
 						+"Customer City : "+ e.getCustomerCity() + ":::"+"Customer Phone : " + e.getCustomerPhone() + ":::"+"CustomerLoyalityPoints : " + e.getCustomerLoyalityPoint()));
-		assertEquals(allArticlesResponse.getServiceStatus().getStatusCode(), "200");
+		assertEquals("200",allArticlesResponse.getServiceStatus().getStatusCode());
 	}
 	
 	
@@ -68,7 +68,7 @@ public class MySpringApplicationClientTests {
 		customer.setCustomerId(4311);
 		customer.setCustomerLoyalityPoint(554);
 		UpdateCustomerResponse response = customerClient.updateCustomer(customer);
-		assertEquals(response.getServiceStatus().getStatusCode(), "200");
+		assertEquals("200",response.getServiceStatus().getStatusCode());
 		
 		
 	}
@@ -79,7 +79,7 @@ public class MySpringApplicationClientTests {
 		
 		log.info("--- Delete Customer ---");
 		DeleteCustomerResponse response = customerClient.deleteCustomer(4328);
-		assertEquals(response.getServiceStatus().getStatusCode(), "200");
+		assertEquals("200",response.getServiceStatus().getStatusCode());
 	}
 	
 	
@@ -88,7 +88,7 @@ public class MySpringApplicationClientTests {
 		
 		log.info("--- Add Customer ---");
 		AddCustomerResponse response  = customerClient.addCustomer(4329, "Satish", "Hyd", Long.valueOf("9550510989"), 100);
-		assertEquals(response.getServiceStatus().getStatusCode(), "200");
+		assertEquals("200",response.getServiceStatus().getStatusCode());
 		
 	}
 	

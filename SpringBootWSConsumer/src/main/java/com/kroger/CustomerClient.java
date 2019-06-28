@@ -20,15 +20,13 @@ public class CustomerClient extends WebServiceGatewaySupport  {
 	public GetCustomerByIdResponse getCustomer(long customerId) {
 		GetCustomerByIdRequest request = new GetCustomerByIdRequest();
 		request.setCustomerId(customerId);
-		GetCustomerByIdResponse response = (GetCustomerByIdResponse) getWebServiceTemplate().marshalSendAndReceive(
+		return (GetCustomerByIdResponse) getWebServiceTemplate().marshalSendAndReceive(
 				request, new SoapActionCallback(EndPointUrls.CUSTOMER_BY_ID));
-		return response;
 	}
 	public GetAllCustomerResponse getAllCustomers() {
 		GetAllCustomerRequest request = new GetAllCustomerRequest();
-		GetAllCustomerResponse response = (GetAllCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
+		return (GetAllCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
 				request, new SoapActionCallback(EndPointUrls.GET_ALL_CUSTOMER));
-     	return response;
 	}	
 	public AddCustomerResponse addCustomer(long customerId,String customerName,String customerCity,long customerPhone,long customerLoyalityPoint) {
 		AddCustomerRequest request = new AddCustomerRequest();
@@ -38,22 +36,19 @@ public class CustomerClient extends WebServiceGatewaySupport  {
 		request.setCustomerPhone(customerPhone);
 		request.setCustomerLoyalityPoint(customerLoyalityPoint);
 		
-		AddCustomerResponse response = (AddCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
+		return (AddCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
 				request, new SoapActionCallback(EndPointUrls.ADD_CUSTOMER));
-     	return response;
 	}	
 	public UpdateCustomerResponse updateCustomer(CustomerInfo customerInfo) {
 		UpdateCustomerRequest request = new UpdateCustomerRequest();
 		request.setCustomerInfo(customerInfo);
-		UpdateCustomerResponse response = (UpdateCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
+		return (UpdateCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
 				request, new SoapActionCallback(EndPointUrls.UPDATE_CUSTOMER));
-     	return response;
 	}	
 	public DeleteCustomerResponse deleteCustomer(long customerId) {
 		DeleteCustomerRequest request = new DeleteCustomerRequest();
 		request.setCustomerId(customerId);
-		DeleteCustomerResponse response = (DeleteCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
+		return (DeleteCustomerResponse) getWebServiceTemplate().marshalSendAndReceive(
 				request, new SoapActionCallback(EndPointUrls.DELETE_CUSTOMER));
-     	return response;
 	}		
 }
