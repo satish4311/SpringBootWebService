@@ -12,6 +12,7 @@ public class WSConfigClient {
 		marshaller.setContextPath("com.kroger.wsdl");
 		return marshaller;
 	}
+
 	@Bean
 	public CustomerClient customerClient(Jaxb2Marshaller marshaller) {
 		CustomerClient client = new CustomerClient();

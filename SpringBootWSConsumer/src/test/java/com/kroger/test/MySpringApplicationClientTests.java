@@ -1,6 +1,5 @@
 package com.kroger.test;
 
-
 import static org.junit.Assert.assertEquals;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +29,7 @@ public class MySpringApplicationClientTests {
 
 	@Test
 	public void getCustomerId() {
-		
+
 		log.info("--- Get Customer by Id ---");
 		GetCustomerByIdResponse customerByIdResponse = customerClient.getCustomer(4311);
 		CustomerInfo customerInfo = customerByIdResponse.getCustomerInfo();
@@ -38,65 +37,52 @@ public class MySpringApplicationClientTests {
 				+ customerInfo.getCustomerName() + ":::" + "Customer Phone : " + customerInfo.getCustomerPhone() + ":::"
 				+ "Customer City : " + customerInfo.getCustomerCity() + ":::" + "CustomerLoyalityPoints :"
 				+ customerInfo.getCustomerLoyalityPoint());
-		
 
-		 assertEquals("200",customerByIdResponse.getServiceStatus().getStatusCode() );
-		
+		assertEquals("200", customerByIdResponse.getServiceStatus().getStatusCode());
 
-
-		
 	}
-	
-	
+
 	@Test
 	public void getAllCustomers() {
 		log.info("--- Get all Customers ---");
-		
+
 		GetAllCustomerResponse allArticlesResponse = customerClient.getAllCustomers();
 		allArticlesResponse.getCustomerInfo().stream()
-				.forEach(e -> log.info("Customer Id : " +e.getCustomerId() + ":::"+"Customer Name : " + e.getCustomerName() + ":::"
-						+"Customer City : "+ e.getCustomerCity() + ":::"+"Customer Phone : " + e.getCustomerPhone() + ":::"+"CustomerLoyalityPoints : " + e.getCustomerLoyalityPoint()));
-		assertEquals("200",allArticlesResponse.getServiceStatus().getStatusCode());
+				.forEach(e -> log.info("Customer Id : " + e.getCustomerId() + ":::" + "Customer Name : "
+						+ e.getCustomerName() + ":::" + "Customer City : " + e.getCustomerCity() + ":::"
+						+ "Customer Phone : " + e.getCustomerPhone() + ":::" + "CustomerLoyalityPoints : "
+						+ e.getCustomerLoyalityPoint()));
+		assertEquals("200", allArticlesResponse.getServiceStatus().getStatusCode());
 	}
-	
-	
+
 	@Test
 	public void updateCustomer() {
-		
+
 		log.info("--- Update Customer ---");
 		CustomerInfo customer = new CustomerInfo();
 		customer.setCustomerId(4311);
 		customer.setCustomerLoyalityPoint(554);
 		UpdateCustomerResponse response = customerClient.updateCustomer(customer);
-		assertEquals("200",response.getServiceStatus().getStatusCode());
-		
-		
+		assertEquals("200", response.getServiceStatus().getStatusCode());
+
 	}
-	
+
 	@Test
 	public void deleteCustomer() {
-		
-		
+
 		log.info("--- Delete Customer ---");
-		DeleteCustomerResponse response = customerClient.deleteCustomer(4332);
-		assertEquals("200",response.getServiceStatus().getStatusCode());
+		DeleteCustomerResponse response = customerClient.deleteCustomer(8188);
+		assertEquals("200", response.getServiceStatus().getStatusCode());
 	}
-	
-	
+
 	@Test
 	public void addCustomer() {
-		
+
 		log.info("--- Add Customer ---");
-		AddCustomerResponse response  = customerClient.addCustomer(4333, "Satish", "Hyd", Long.valueOf("9550510989"), 100);
-		assertEquals("200",response.getServiceStatus().getStatusCode());
-		
-	}
-	
-	
-	
-	
-	}
-	
-	
+		AddCustomerResponse response = customerClient.addCustomer(8189, "Satish", "Hyd", Long.valueOf("9550510989"),
+				100);
+		assertEquals("200", response.getServiceStatus().getStatusCode());
 
+	}
 
+}

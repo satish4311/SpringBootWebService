@@ -2,8 +2,8 @@ package com.kroger;
 
 public class EndPointUrls {
 
-	private EndPointUrls(){
-		
+	private EndPointUrls() {
+
 	}
 
 	public static final String CUSTOMER_BY_ID = "http://localhost:9098/soapws/getCustomerByIdRequest";
