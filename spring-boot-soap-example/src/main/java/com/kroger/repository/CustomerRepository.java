@@ -12,19 +12,12 @@ import com.datastax.driver.core.ConsistencyLevel;
 import com.kroger.entity.Customer;
 
 @Repository
-public interface CustomerRepository extends CassandraRepository<Customer,Long>
-{
-	
-	
-	
-	@Consistency(ConsistencyLevel.LOCAL_ONE)
+public interface CustomerRepository extends CassandraRepository<Customer, Long> {
+
+	@Consistency(ConsistencyLevel.LOCAL_QUORUM)
 	Optional<Customer> findByCustomerId(Long customerId);
-	
-	
+
 	@Query("select * from customer")
-	List<Customer> findAll(); 
-	
-	
-	
-   
+	List<Customer> findAll();
+
 }

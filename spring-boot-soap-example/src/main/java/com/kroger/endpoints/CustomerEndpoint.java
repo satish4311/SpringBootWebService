@@ -116,9 +116,11 @@ public class CustomerEndpoint {
 
 			else if ((request.getCustomerId() != 0)
 					&& (((configProperties.getNullCheck().equals(request.getCustomerName()))
-							|| request.getCustomerName() == null || (configProperties.getPatternCheck().equals(request.getCustomerName())) )
+							|| request.getCustomerName() == null
+							|| (configProperties.getPatternCheck().equals(request.getCustomerName())))
 							|| ((configProperties.getNullCheck().equals(request.getCustomerCity()))
-									|| request.getCustomerCity() == null || (configProperties.getPatternCheck().equals(request.getCustomerCity())))
+									|| request.getCustomerCity() == null
+									|| (configProperties.getPatternCheck().equals(request.getCustomerCity())))
 							|| (request.getCustomerPhone() == 0))) {
 				ServiceStatus service = new ServiceStatus();
 				service.setMessage(configProperties.getAddErrorMandMsg());
@@ -175,7 +177,8 @@ public class CustomerEndpoint {
 							|| (configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerName())))
 							&& ((configProperties.getNullCheck().equals(request.getCustomerInfo().getCustomerCity()))
 									|| request.getCustomerInfo().getCustomerCity() == null
-									|| (configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerCity())))
+									|| (configProperties.getPatternCheck()
+											.equals(request.getCustomerInfo().getCustomerCity())))
 							&& (request.getCustomerInfo().getCustomerPhone() == 0)
 							&& (request.getCustomerInfo().getCustomerLoyalityPoint() == 0))) {
 				ServiceStatus service = new ServiceStatus();
@@ -204,11 +207,11 @@ public class CustomerEndpoint {
 			else {
 				Customer customer = new Customer();
 				customer.setCustomerId(request.getCustomerInfo().getCustomerId());
-				if(!(configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerName()))) {
-				customer.setCustomerName(request.getCustomerInfo().getCustomerName());
+				if (!(configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerName()))) {
+					customer.setCustomerName(request.getCustomerInfo().getCustomerName());
 				}
-				if(!(configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerCity()))) {
-				customer.setCustomerCity(request.getCustomerInfo().getCustomerCity());
+				if (!(configProperties.getPatternCheck().equals(request.getCustomerInfo().getCustomerCity()))) {
+					customer.setCustomerCity(request.getCustomerInfo().getCustomerCity());
 				}
 				customer.setCustomerPhone(request.getCustomerInfo().getCustomerPhone());
 				customer.setCustomerRewardPoints(request.getCustomerInfo().getCustomerLoyalityPoint());

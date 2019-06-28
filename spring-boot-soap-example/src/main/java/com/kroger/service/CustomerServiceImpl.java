@@ -29,12 +29,13 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<Customer> getAllCustomers() {
 		log.info("Inside getAllCustomers() Method ");
-		List<Customer> list = new LinkedList<Customer>();
+		List<Customer> list = new LinkedList<>();
+		ServiceStatus serviceStatus = null;
 		try {
 			list = customerRepository.findAll();
 
 			if (list.isEmpty()) {
-				ServiceStatus serviceStatus = new ServiceStatus();
+				serviceStatus = new ServiceStatus();
 				serviceStatus.setMessage(configProperties.getCustDataNotExists());
 				serviceStatus.setStatusCode(configProperties.getFailStatusCode());
 				throw new ServiceFaultException(configProperties.getError(), serviceStatus);
@@ -43,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 		} catch (CassandraConnectionFailureException exception) {
 
-			ServiceStatus serviceStatus = new ServiceStatus();
+			serviceStatus = new ServiceStatus();
 			serviceStatus.setMessage(configProperties.getDataBaseDown());
 			serviceStatus.setStatusCode(configProperties.getFailStatusCode());
 

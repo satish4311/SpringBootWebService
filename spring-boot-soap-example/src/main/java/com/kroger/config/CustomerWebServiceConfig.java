@@ -24,7 +24,7 @@ import com.kroger.customer.ServiceFaultException;
 @Configuration
 @EnableWs
 public class CustomerWebServiceConfig extends WsConfigurerAdapter {
-	
+
 	@Autowired
 	private ConfigProperties configProperties;
 

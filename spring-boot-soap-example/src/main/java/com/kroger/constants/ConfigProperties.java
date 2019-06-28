@@ -40,7 +40,16 @@ public class ConfigProperties {
 	private String updateErrorMandMsg;
 	private String nullCheck;
 	private String patternCheck;
-	
+	private String validationMsg;
+
+	public String getValidationMsg() {
+		return validationMsg;
+	}
+
+	public void setValidationMsg(String validationMsg) {
+		this.validationMsg = validationMsg;
+	}
+
 	public String getPatternCheck() {
 		return patternCheck;
 	}
@@ -57,7 +66,6 @@ public class ConfigProperties {
 		this.wsdlPort = wsdlPort;
 	}
 
-	
 	public String getWsdlXsdLoc() {
 		return wsdlXsdLoc;
 	}
@@ -65,7 +73,6 @@ public class ConfigProperties {
 	public void setWsdlXsdLoc(String wsdlXsdLoc) {
 		this.wsdlXsdLoc = wsdlXsdLoc;
 	}
-
 
 	public String getConflictCode() {
 		return conflictCode;
@@ -274,7 +281,7 @@ public class ConfigProperties {
 	public void setNullCheck(String nullCheck) {
 		this.nullCheck = nullCheck;
 	}
-	
+
 	public String getWsdlContext() {
 		return wsdlContext;
 	}
@@ -290,6 +297,5 @@ public class ConfigProperties {
 	public void setWsdlUri(String wsdlUri) {
 		this.wsdlUri = wsdlUri;
 	}
-
 
 }
