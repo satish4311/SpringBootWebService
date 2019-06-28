@@ -78,7 +78,7 @@ public class MySpringApplicationClientTests {
 		
 		
 		log.info("--- Delete Customer ---");
-		DeleteCustomerResponse response = customerClient.deleteCustomer(4326);
+		DeleteCustomerResponse response = customerClient.deleteCustomer(4327);
 		assertEquals(response.getServiceStatus().getStatusCode(), "200");
 	}
 	
@@ -87,7 +87,7 @@ public class MySpringApplicationClientTests {
 	public void addCustomer() {
 		
 		log.info("--- Add Customer ---");
-		AddCustomerResponse response  = customerClient.addCustomer(4327, "Satish", "Hyd", Long.valueOf("9550510989"), 100);
+		AddCustomerResponse response  = customerClient.addCustomer(4328, "Satish", "Hyd", Long.valueOf("9550510989"), 100);
 		assertEquals(response.getServiceStatus().getStatusCode(), "200");
 		
 	}
